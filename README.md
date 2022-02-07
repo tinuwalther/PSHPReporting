@@ -23,6 +23,7 @@ PowerShell 7, PSHTML, Pode Server or IIS.
 .\PSHPREPORTING
 |   README.md
 |   Test-PsNetTools_JUnit.html
+|   Test-PsNetTools_NUnit.html
 |   
 +---assets
 |   +---BootStrap
@@ -35,7 +36,7 @@ PowerShell 7, PSHTML, Pode Server or IIS.
 |   |       LICENSE.md
 |   |
 |   \---Jquery
-|           jquery.min.js|
+|           jquery.min.js
 |
 +---bin
 |       Invoke-PesterResult.Tests.ps1
@@ -43,7 +44,6 @@ PowerShell 7, PSHTML, Pode Server or IIS.
 |       Read-FromXML.ps1
 |       
 +---data
-|       Test-PsNetTools_JSON.json
 |       Test-PsNetTools_JUnit.JUnitXml
 |       Test-PsNetTools_NUnit.NUnitXml
 |
@@ -85,9 +85,11 @@ To create a PSHTML-Page run: ````New-PesterReport.ps1````
 
 ## Usage with NUnitXML
 
+````New-PesterReport.ps1```` use the NUnitXml file from a Pester Test. It ````ConvertFrom-PesterNUnitXml```` to a PSCustomObject and create a PSHTML-Page.
+
 To create a NUnitXml run: 
 ````Invoke-Pester -Path .\ -OutputFile .\data\Test-PsNetTools.NUnitXml -OutputFormat NUnitXml````
 
-To create a PSHTML-Page run: **Not yet implemented**
+To create a PSHTML-Page run: ````New-PesterReport.ps1````
 
 [Top](#table-of-contents)
