@@ -13,6 +13,10 @@ PSHPReporting - PowerShell PSHTML-based Pester Reporting
 
 [Top](#table-of-contents)
 
+## Requirements
+
+PowerShell 7, PSHTML, Pode Server or IIS.
+
 ## Folder structure
 
 ````
@@ -20,6 +24,19 @@ PSHPReporting - PowerShell PSHTML-based Pester Reporting
 |   README.md
 |   Test-PsNetTools_JUnit.html
 |   
++---assets
+|   +---BootStrap
+|   |       bootstrap.js
+|   |       bootstrap.min.css
+|   |       bootstrap.min.js
+|   |
+|   +---Chartjs
+|   |       Chart.bundle.min.js
+|   |       LICENSE.md
+|   |
+|   \---Jquery
+|           jquery.min.js|
+|
 +---bin
 |       Invoke-PesterResult.Tests.ps1
 |       New-PesterReport.ps1

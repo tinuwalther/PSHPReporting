@@ -217,6 +217,8 @@ function New-PesterReport{
                 meta -charset 'UTF-8'
                 meta -name 'author' -content "Martin Walther"   
                 Link -href "style/style.css" -rel stylesheet
+                Script -src "assets/Jquery/jquery.min.js"
+                Script -src "assets/BootStrap/bootstrap.min.js"
      
                 title $HeaderTitle
                 Write-PSHTMLAsset -Name Jquery
