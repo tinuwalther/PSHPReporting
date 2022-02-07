@@ -78,7 +78,7 @@ header {
 
 footer {
   background: #343a40;
-  padding: 1;
+  padding: 20;
   color: #f8f9fa;
   text-align: center;
 }
@@ -107,7 +107,7 @@ h3 {
 
 h4 {
   font-family: "QuickSand", sans-serif;
-  margin-top: 60px;
+  margin-top: 10px;
   margin-bottom: 60px;
 }
 

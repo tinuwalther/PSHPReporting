@@ -37,12 +37,11 @@ function ConvertFrom-PesterNUnitXml{
         if(Test-Path -Path $InputFile){
             [xml]$doc = Get-Content -path $InputFile
             if ($doc.'test-results'.noNamespaceSchemaLocation -match "nunit") {    
-                Write-Host "It's NUnit format!"   
 
                 $doc.'test-results' | ForEach-Object {
                     $TestComputer      = $_.environment.'machine-name'
-                    $TotalCount        = [int]$_.total
-                    $PassedCount       = ([int]$_.total) - ([int]($_.failures) + [int]($_.skipped) + [int]($_.'not-run') + ([int]$_.errors) + ([int]$_.inconclusive) + ([int]$_.ignored) + ([int]$_.invalid))
+                    $TotalCount        = ([int]$_.total) + [int]($_.'not-run')
+                    $PassedCount       = ([int]$_.total) - ([int]($_.failures) + [int]($_.skipped) + ([int]$_.errors) + ([int]$_.inconclusive) + ([int]$_.ignored) + ([int]$_.invalid))
                     $ErrorCount        = [int]$_.errors
                     $FailedCount       = [int]$_.failures
                     $SkippedCount      = [int]$_.skipped
@@ -87,7 +86,7 @@ function ConvertFrom-PesterNUnitXml{
                     TestComputer = $TestComputer
 
                     TotalCount        = $TotalCount
-                    PassedCount       = $PassedCount
+                    PassedCount       = ($Tests).Where({ $_.status -match "Success" }).Count
                     FailedCount       = $FailedCount
                     ErrorCount        = $ErrorCount
                     SkippedCount      = $SkippedCount
@@ -98,6 +97,11 @@ function ConvertFrom-PesterNUnitXml{
 
                     Duration     = $Duration
                     Result       = $Result
+
+                    Passed       = ($Tests).Where({ $_.status -match "Success" })  | Select-Object TestName, Description, Status, Message, Duration
+                    Failed       = ($Tests).Where({ $_.status -match "Failure" })  | Select-Object TestName, Description, Status, Message, Duration
+                    Skipped      = ($Tests).Where({ $_.status -match "Skipped" }) | Select-Object TestName, Description, Status, Message, Duration
+                    NotRun       = ($Tests).Where({ $_.status -match "NotRun" })  | Select-Object TestName, Description, Status, Message, Duration
 
                     Tests        = $Tests
                 } 
