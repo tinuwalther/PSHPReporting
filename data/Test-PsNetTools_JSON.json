@@ -1,0 +1,110 @@
+{
+  "Containers": [
+    "[-] D:\\github.com\\PrivateStuff\\PesterReport\\functions\\Invoke-PesterResult.Tests.ps1"
+  ],
+  "Result": "Failed",
+  "FailedCount": 2,
+  "FailedBlocksCount": 0,
+  "FailedContainersCount": 0,
+  "PassedCount": 3,
+  "SkippedCount": 0,
+  "NotRunCount": 1,
+  "TotalCount": 6,
+  "Duration": {
+    "Ticks": 1262585,
+    "Days": 0,
+    "Hours": 0,
+    "Milliseconds": 126,
+    "Minutes": 0,
+    "Seconds": 0,
+    "TotalDays": 1.4613252314814815E-06,
+    "TotalHours": 3.507180555555555E-05,
+    "TotalMilliseconds": 126.2585,
+    "TotalMinutes": 0.002104308333333333,
+    "TotalSeconds": 0.1262585
+  },
+  "Executed": true,
+  "ExecutedAt": "2022-02-04T20:37:11.645351+01:00",
+  "Version": "5.2.2",
+  "PSVersion": "7.2.1",
+  "PSBoundParameters": {
+    "Path": ".\\",
+    "ExcludeTagFilter": "NotRun",
+    "PassThru": "True"
+  },
+  "Plugins": null,
+  "PluginConfiguration": null,
+  "PluginData": null,
+  "Configuration": {
+    "Run": "Run configuration.",
+    "Filter": "Filter configuration",
+    "CodeCoverage": "CodeCoverage configuration.",
+    "TestResult": "TestResult configuration.",
+    "Should": "Should configuration.",
+    "Debug": "Debug configuration for Pester. ⚠ Use at your own risk!",
+    "Output": "Output configuration"
+  },
+  "DiscoveryDuration": {
+    "Ticks": 166490,
+    "Days": 0,
+    "Hours": 0,
+    "Milliseconds": 16,
+    "Minutes": 0,
+    "Seconds": 0,
+    "TotalDays": 1.9269675925925926E-07,
+    "TotalHours": 4.624722222222222E-06,
+    "TotalMilliseconds": 16.649,
+    "TotalMinutes": 0.00027748333333333335,
+    "TotalSeconds": 0.016649
+  },
+  "UserDuration": {
+    "Ticks": 402299,
+    "Days": 0,
+    "Hours": 0,
+    "Milliseconds": 40,
+    "Minutes": 0,
+    "Seconds": 0,
+    "TotalDays": 4.656238425925926E-07,
+    "TotalHours": 1.1174972222222222E-05,
+    "TotalMilliseconds": 40.2299,
+    "TotalMinutes": 0.0006704983333333333,
+    "TotalSeconds": 0.0402299
+  },
+  "FrameworkDuration": {
+    "Ticks": 693796,
+    "Days": 0,
+    "Hours": 0,
+    "Milliseconds": 69,
+    "Minutes": 0,
+    "Seconds": 0,
+    "TotalDays": 8.030046296296296E-07,
+    "TotalHours": 1.927211111111111E-05,
+    "TotalMilliseconds": 69.3796,
+    "TotalMinutes": 0.0011563266666666666,
+    "TotalSeconds": 0.0693796
+  },
+  "Failed": [
+    "[-] [NEG] Test-PsNetDig should return true",
+    "[-] [NEG] Test-PsNetTping should return true"
+  ],
+  "FailedBlocks": [],
+  "FailedContainers": [],
+  "Passed": [
+    "[+] [POS] Test-PsNetDig should return a PSCustomObject",
+    "[+] [POS] Test-PsNetUping should return true",
+    "[+] [POS] Test-PsNetWping should return true"
+  ],
+  "Skipped": [],
+  "NotRun": [
+    "[ ] [NEG] Test-PsNetPing should return true"
+  ],
+  "Tests": [
+    "[-] [NEG] Test-PsNetDig should return true",
+    "[+] [POS] Test-PsNetDig should return a PSCustomObject",
+    "[ ] [NEG] Test-PsNetPing should return true",
+    "[-] [NEG] Test-PsNetTping should return true",
+    "[+] [POS] Test-PsNetUping should return true",
+    "[+] [POS] Test-PsNetWping should return true"
+  ],
+  "CodeCoverage": null
+}
