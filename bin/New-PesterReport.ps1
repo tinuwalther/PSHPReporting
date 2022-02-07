@@ -215,9 +215,16 @@ function New-PesterReport{
             #region header                       
             head {
                 meta -charset 'UTF-8'
-                meta -name 'author' -content "Martin Walther"   
+                meta -name 'author' -content "Martin Walther"  
+
+                Link -href "assets/BootStrap/bootstrap.min.css" -rel stylesheet
                 Link -href "style/style.css" -rel stylesheet
+
                 Script -src "assets/Jquery/jquery.min.js"
+
+                Script -src "assets/Chartjs/Chart.bundle.min.js"
+
+                Script -src "assets/BootStrap/bootstrap.js"
                 Script -src "assets/BootStrap/bootstrap.min.js"
      
                 title $HeaderTitle
