@@ -205,7 +205,6 @@ function New-PesterReport{
         Import-Module PSHTML
         if(Test-Path -Path $Inputfile){
             $TestInputFile = Get-Item $InputFile
-            $BaseInputFile = $TestInputFile.BaseName
             switch($TestInputFile.Extension){
                 '.junitxml' {
                     $InputObject = ConvertFrom-PesterJUnitXml -InputFile $Inputfile #-Verbose
@@ -222,6 +221,7 @@ function New-PesterReport{
     }
     process {
         Write-Verbose "[Process] $function"
+        $BaseInputFile = $($TestInputFile.Name) -Replace '\.', '_' #$TestInputFile.BaseName
 
         #region Variables
         $PieCanvasID         = "piecanvas"

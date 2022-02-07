@@ -22,8 +22,8 @@ PowerShell 7, PSHTML, Pode Server or IIS.
 ````
 .\PSHPREPORTING
 |   README.md
-|   Test-PsNetTools_JUnit.html
-|   Test-PsNetTools_NUnit.html
+|   Test-PsNetTools_JUnitXml.html
+|   Test-PsNetTools_NUnitXml.html
 |   
 +---assets
 |   +---BootStrap
@@ -44,8 +44,8 @@ PowerShell 7, PSHTML, Pode Server or IIS.
 |       Read-FromXML.ps1
 |       
 +---data
-|       Test-PsNetTools_JUnit.JUnitXml
-|       Test-PsNetTools_NUnit.NUnitXml
+|       Test-PsNetTools.JUnitXml
+|       Test-PsNetTools.NUnitXml
 |
 +---img
 |       PSHPReporting.jpg
