@@ -1,192 +1,3 @@
-function ConvertFrom-PesterJUnitXml{
-    [CmdletBinding()]
-    param (
-        [Parameter(
-            Mandatory = $true,
-            ValueFromPipeline = $true,
-            ValueFromPipelineByPropertyName = $true,
-            Position = 0
-        )]
-        [String]$InputFile
-    )
-
-    begin{
-        $function = $($MyInvocation.MyCommand.Name)
-        Write-Verbose "[Begin]   $function"
-    }
-
-    process {
-        Write-Verbose "[Process] $function"
-
-        if(Test-Path -Path $InputFile){
-            [xml]$doc = Get-Content -path $InputFile
-            if ($doc.testsuites.noNamespaceSchemaLocation -match "junit") {        
-                
-                $PesterFileDate = (Get-Item -Path $InputFile).CreationTime.ToString().trim()
-                $doc.testsuites.testsuite | ForEach-Object {
-                    $PesterFile     = $_.name
-                    $TestComputer   = $_.hostname
-                    $TotalCount     = [int]$_.tests
-                    $PassedCount    = ([int]$_.tests) - ([int]($_.failures) + [int]($_.skipped) + [int]($_.disabled) + ([int]$_.errors))
-                    $ErrorCount     = [int]$_.errors
-                    $FailedCount    = [int]$_.failures
-                    $SkippedCount   = [int]$_.skipped
-                    $NotRunCount    = [int]$_.disabled
-                    $Duration       = $_.time
-                    $Result         = if($TotalCount -ne $PassedCount){'Failed'}else{'Passed'}
-                }
-
-                $Tests = $doc.testsuites.testsuite.testcase | ForEach-Object {
-                    if($_.status -match "Failed"){
-                        $null = $_.failure.message -match '(?<=^)(.*)(?=\.)'
-                        $Message = $matches[0]
-                    }elseif($_.status -match "Passed"){
-                        $Message = "Success"
-                    }else{
-                        $Message = $null
-                    }
-                    $TestName = $_.name -split '\.'
-                    [PSCustomObject]@{
-                        TestName    = $TestName[0]
-                        Description = $TestName[1]
-                        Status      = $_.status
-                        Duration    = $_.time
-                        Message     = $Message
-                    }
-                }
-        
-                $PesterResult = [PSCustomObject]@{
-                    PesterFile   = $PesterFile
-                    ExecutedAt   = $PesterFileDate
-                    TestComputer = $TestComputer
-                    TotalCount   = $TotalCount
-                    PassedCount  = $PassedCount
-                    FailedCount  = $FailedCount
-                    ErrorCount   = $ErrorCount
-                    SkippedCount = $SkippedCount
-                    NotRunCount  = $NotRunCount
-                    Duration     = $Duration
-                    Result       = $Result
-                    Passed       = ($Tests).Where({ $_.status -match "Passed" })  | Select-Object TestName, Description, Status, Message, Duration
-                    Failed       = ($Tests).Where({ $_.status -match "Failed" })  | Select-Object TestName, Description, Status, Message, Duration
-                    Skipped      = ($Tests).Where({ $_.status -match "Skipped" }) | Select-Object TestName, Description, Status, Message, Duration
-                    NotRun       = ($Tests).Where({ $_.status -match "NotRun" })  | Select-Object TestName, Description, Status, Message, Duration
-                    Tests        = $Tests
-                }                
-        
-            }else{
-                Write-Warning "Input is not in the JUnit-format!"
-            }
-        }
-    }
-
-    end {
-        Write-Verbose "[End]     $function"
-        return $PesterResult
-    }  
-}
-
-function ConvertFrom-PesterNUnitXml{
-    [CmdletBinding()]
-    param (
-        [Parameter(
-            Mandatory = $true,
-            ValueFromPipeline = $true,
-            ValueFromPipelineByPropertyName = $true,
-            Position = 0
-        )]
-        [String]$InputFile
-    )
-
-    begin{
-        $function = $($MyInvocation.MyCommand.Name)
-        Write-Verbose "[Begin]   $function"
-    }
-
-    process {
-        Write-Verbose "[Process] $function"
-
-        if(Test-Path -Path $InputFile){
-            [xml]$doc = Get-Content -path $InputFile
-            if ($doc.'test-results'.noNamespaceSchemaLocation -match "nunit") {    
-
-                $doc.'test-results' | ForEach-Object {
-                    $TestComputer      = $_.environment.'machine-name'
-                    $TotalCount        = ([int]$_.total) + [int]($_.'not-run')
-                    $PassedCount       = ([int]$_.total) - ([int]($_.failures) + [int]($_.skipped) + ([int]$_.errors) + ([int]$_.inconclusive) + ([int]$_.ignored) + ([int]$_.invalid))
-                    $ErrorCount        = [int]$_.errors
-                    $FailedCount       = [int]$_.failures
-                    $SkippedCount      = [int]$_.skipped
-                    $NotRunCount       = [int]$_.'not-run'
-                    $InconclusiveCount = [int]$_.inconclusive
-                    $IgnoredCount      = [int]$_.ignored
-                    $InvalidCount      = [int]$_.invalid
-                    $ExecutedAt        = Get-Date "$($_.date) $($_.time)" -f 'yyyy-MM-dd HH:mm:ss'
-                }
-
-                $doc.'test-results'.'test-suite' | ForEach-Object {
-                    $Result     = $_.result
-                    $Duration   = $_.time
-                }
-
-                $doc.'test-results'.'test-suite'.results.'test-suite' | ForEach-Object {
-                    $PesterFile     = $_.name
-                }
-
-                $Tests = $doc.'test-results'.'test-suite'.results.'test-suite'.results.'test-suite'.results.'test-case' | ForEach-Object {
-                    if($_.result -match "Failure"){
-                        $null = $_.failure.message -match '(?<=^)(.*)(?=\.)'
-                        $Message = $matches[0]
-                    }elseif($_.result -match "Success"){
-                        $Message = "Success"
-                    }else{
-                        $Message = $null
-                    }
-                    $TestName = $_.name -split '\.'
-                    [PSCustomObject]@{
-                        TestName    = $TestName[0]
-                        Description = $_.description
-                        Status      = $_.result
-                        Duration    = $_.time
-                        Message     = $Message
-                    }
-                }
-
-                $PesterResult = [PSCustomObject]@{
-                    PesterFile   = $PesterFile
-                    ExecutedAt   = $ExecutedAt
-                    TestComputer = $TestComputer
-
-                    TotalCount        = $TotalCount
-                    PassedCount       = ($Tests).Where({ $_.status -match "Success" }).Count
-                    FailedCount       = $FailedCount
-                    ErrorCount        = $ErrorCount
-                    SkippedCount      = $SkippedCount
-                    NotRunCount       = $NotRunCount
-                    InconclusiveCount = $InconclusiveCount
-                    IgnoredCount      = $IgnoredCount
-                    InvalidCount      = $InvalidCount
-
-                    Duration     = $Duration
-                    Result       = $Result
-
-                    Passed       = ($Tests).Where({ $_.status -match "Success" })  | Select-Object TestName, Description, Status, Message, Duration
-                    Failed       = ($Tests).Where({ $_.status -match "Failure" })  | Select-Object TestName, Description, Status, Message, Duration
-                    Skipped      = ($Tests).Where({ $_.status -match "Skipped" }) | Select-Object TestName, Description, Status, Message, Duration
-                    NotRun       = ($Tests).Where({ $_.status -match "NotRun" })  | Select-Object TestName, Description, Status, Message, Duration
-
-                    Tests        = $Tests
-                } 
-            }
-        }
-    }
-
-    end {
-        Write-Verbose "[End]     $function"
-        return $PesterResult
-    }
-}
-
 function New-PesterReport{
     [CmdletBinding()]
     param (
@@ -247,13 +58,11 @@ function New-PesterReport{
         $DiagramCaptionLeft     = 'Test Summary'
         $DiagramCaptionMiddle   = 'Test Summary'
         $DiagramCaptionRight    = 'Pass Percentage'
-        $BodyCaptionDiagram     = "Summary"
         $DiagramBackgroundColor = @("green","red","yellow","orange")
         #endregion
 
         #region table
         $ShowPassedTests  = $false
-        $BodyCaptionTable = "Test Results"
         $TableClasses     = 'table table-sm table-hover' #"table table-responsive table-sm table-hover"
         $TableHeaders     = "thead-light"
         $TableStyle       = "width:100%"
@@ -330,7 +139,7 @@ function New-PesterReport{
                 Write-PSHTMLAsset -Name BootStrap
                 Write-PSHTMLAsset -Name Chartjs
             } 
-            #endregion
+            #endregion header
               
             #region body
             body {
@@ -350,36 +159,29 @@ function New-PesterReport{
 
                     # <!-- Navbar links -->
                     div -class "collapse navbar-collapse" -id "collapsibleNavbar" -Content {
-
                         ul -class "navbar-nav" -content {
-            
                             #FixedLinks
                             li -class "nav-item" -content {
                                 a -class "nav-link" -href "https://pshtml.readthedocs.io/" -Target _blank -content { "PSHTML" }
                             }
-
                             li -class "nav-item" -content {
                                 a -class "nav-link" -href "https://pester.dev/" -Target _blank -content { "Pester" }
                             }
-                    
                             li -class "nav-item" -content {
                                 a -class "nav-link" -href "https://getbootstrap.com/" -Target _blank -content { "Bootstrap" }
                             }
-                    
                             li -class "nav-item" -content {
                                 a -class "nav-link" -href "https://www.w3schools.com/" -Target _blank -content { "w3schools" }
                             }
-                    
                         }
-            
                     }
-
                 }
 
-                article -id "Content" -Content {
+                # <!-- Section Content -->
+                article -id "article" -Content {
+                    div -id "Content" -Class $ContinerStyle {
 
-                    div -id "SiteContent" -Class $ContinerStyle {
-
+                        # <!-- Section Diagrams -->
                         article -id "Diagrams" -Content {
 
                             div -Class $ContinerStyle {
@@ -410,13 +212,13 @@ function New-PesterReport{
                                     }
                             
                                     script -content {
-                                        #Doughnut Chart
+                                        # Doughnut Chart
                                         $data   = @($TestSummary.PassedCount, $TestSummary.FailedCount, $TestSummary.NotRunCount, $TestSummary.SkippedCount)
                                         $labels = @('PassedCount', 'FailedCount', 'NotRunCount', 'SkippedCount')
                                         $dsd1   = New-PSHTMLChartDoughnutDataSet -Data $data -backgroundcolor $DiagramBackgroundColor
                                         New-PSHTMLChart -Type doughnut -DataSet $dsd1 -title $DiagramCaptionLeft -Labels $labels -CanvasID $DoughnutCanvasID 
 
-                                        #Bar Chart
+                                        # Bar Chart
                                         $dsb1 = New-PSHTMLChartBarDataSet -Data $TestSummary.TotalCount   -label 'TotalCount'   -backgroundColor 'blue'   -hoverBackgroundColor 'blue'   -hoverBorderColor 'black'
                                         $dsb2 = New-PSHTMLChartBarDataSet -Data $TestSummary.FailedCount  -label 'FailedCount'  -backgroundColor 'red'    -hoverBackgroundColor 'red'    -hoverBorderColor 'black'
                                         $dsb3 = New-PSHTMLChartBarDataSet -Data $TestSummary.PassedCount  -label 'PassedCount'  -backgroundColor 'green'  -hoverBackgroundColor 'green'  -hoverBorderColor 'black'
@@ -424,7 +226,7 @@ function New-PesterReport{
                                         $dsb5 = New-PSHTMLChartBarDataSet -Data $TestSummary.NotRunCount  -label 'NotRunCount'  -backgroundColor 'yellow' -hoverBackgroundColor 'yellow' -hoverBorderColor 'black'
                                         New-PSHTMLChart -type bar -DataSet @($dsb1, $dsb2, $dsb3, $dsb4, $dsb5) -title $DiagramCaptionMiddle -Labels 'Tests as Bar Chart' -CanvasID $BarCanvasID 
 
-                                        #Pie Chart
+                                        # Pie Chart
                                         $data   = @($TestSummary.PassedCount, $TestSummary.FailedCount)
                                         $labels = @('PassedCount', 'FailedCount')
                                         $dsp1   = New-PSHTMLChartPieDataSet -Data $data -label 'Tests as Pie Chart' -BackgroundColor $DiagramBackgroundColor
@@ -434,55 +236,46 @@ function New-PesterReport{
                             }
                         }
 
+                        # <!-- Section Table -->
                         article -id "Table" -Content {
                             if($TestSummary.FailedCount -gt 0 -or $TestSummary.SkippedCount -gt 0 -or $TestSummary.NotRunCount -gt 0){
                                 div -Class $ContinerStyle {
 
+                                    # <!-- Show Passed Tests -->
                                     if($ShowPassedTests){
                                         if($TestSummary.FailedCount -gt 0){
                                             if($Passed){
-                                                p {
-                                                    h3 'Passed'
-                                                }        
+                                                p { h3 'Passed' }        
                                                 ConvertTo-PSHtmlTable -Object $Passed -Properties $TableColunms -TableClass $TableClasses -TheadClass $TableHeaders -TableStyle $TableStyle
                                             }
                                         }
                                     }
-
+                                    # <!-- Show Failed Tests -->
                                     if($TestSummary.FailedCount -gt 0){
                                         if($Failed){
-                                            p {
-                                                h3 'Failed'
-                                            }        
+                                            p { h3 'Failed' }        
                                             ConvertTo-PSHtmlTable -Object $Failed -Properties $TableColunms -TableClass $TableClasses -TheadClass $TableHeaders -TableStyle $TableStyle
                                         }
                                     }
-
+                                    # <!-- Show Skipped Tests -->
                                     if($TestSummary.SkippedCount -gt 0){
                                         if($Skipped){
-                                            p {
-                                                h3 'Skipped'
-                                            }        
+                                            p { h3 'Skipped' }        
                                             ConvertTo-PSHtmlTable -Object $Skipped -Properties $TableColunms -TableClass $TableClasses -TheadClass $TableHeaders  -TableStyle $TableStyle
                                         }
                                     }
-
+                                    # <!-- Show NotRun Tests -->
                                     if($TestSummary.NotRunCount -gt 0){
                                         if($NotRun){
-                                            p {
-                                                h3 'NotRun'
-                                            }        
+                                            p { h3 'NotRun' }        
                                             ConvertTo-PSHtmlTable -Object $NotRun -Properties $TableColunms -TableClass $TableClasses -TheadClass $TableHeaders  -TableStyle $TableStyle
                                         }
                                     }
-                                    p {
-                                        $topNav
-                                    } 
+                                    p { $topNav } 
                                 }
                             }   
                         }
                     }
-
                 }
             }
             #endregion body
@@ -507,10 +300,10 @@ function New-PesterReport{
             
                 }
             }
-            #endregion
+            #endregion footer
 
         }
-        #endregion  
+        #endregion HTML
     }
 
     end{
@@ -520,11 +313,16 @@ function New-PesterReport{
     }
 }
 
+# Dot-sourcing Read-FromXML.ps1 and import ConvertFrom-PesterNUnitXml, ConvertFrom-PesterJUnitXml
+. $PSScriptRoot\Read-FromXML.ps1
+
+# Run New-PesterReport for each *UnitXml-file in data
 Get-ChildItem $($PSScriptRoot).Replace('bin','data') -Filter '*.*UnitXml' | ForEach-Object {
     $Inputfile = Get-ChildItem -Path $_.FullName
     New-PesterReport -InputFile $Inputfile #-Verbose
 }
 
+# Start each html-file with the registered program
 Get-ChildItem $($PSScriptRoot).Replace('bin','') -Filter '*.html' | ForEach-Object {
     Start-Process $_.FullName -PassThru
 }

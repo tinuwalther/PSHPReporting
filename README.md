@@ -4,6 +4,7 @@
 - [Folder structure](#folder-structure)
 - [Usage with JUnitXML](#usage-with-junitxml)
 - [Usage with NUnitXML](#usage-with-nunitxml)
+- [Web Server](#web-server)
 
 # PSHPReporting
 
@@ -15,7 +16,7 @@ PSHPReporting - PowerShell PSHTML-based Pester Reporting
 
 ## Requirements
 
-PowerShell 7, PSHTML, Pode Server or IIS.
+PowerShell 7, PSHTML, Pode Server or IIS, Apache Tomcat, or other web-server.
 
 ## Folder structure
 
@@ -54,6 +55,10 @@ PowerShell 7, PSHTML, Pode Server or IIS.
         style.css
 ````
 
+## PSHPREPORTING
+
+Root-folder, it contains the html-files.
+
 ### bin
 
 Path to store the PowerShell-Scripts.
@@ -91,5 +96,11 @@ To create a NUnitXml run:
 ````Invoke-Pester -Path .\ -OutputFile .\data\Test-PsNetTools.NUnitXml -OutputFormat NUnitXml````
 
 To create a PSHTML-Page run: ````New-PesterReport.ps1````
+
+[Top](#table-of-contents)
+
+## Web Server
+
+Copy the root-folder to the web-folder and remove the folder bin and data.
 
 [Top](#table-of-contents)
