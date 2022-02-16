@@ -39,7 +39,7 @@ Describe "Test PsNetTools" {
 }
 
 <#
-Invoke-Pester -Path .\ -ExcludeTagFilter NotRun -PassThru | ConvertTo-Json -Depth 1 | Set-Content .\data\Test-PsNetTools_JSON.json -Encoding utf8 -Force
-Invoke-Pester -Path .\ -ExcludeTagFilter NotRun -OutputFile .\data\Test-PsNetTools_JUnit.JUnitXml -OutputFormat JUnitXml 
-Invoke-Pester -Path .\ -ExcludeTagFilter NotRun -OutputFile .\data\Test-PsNetTools_NUnit.NUnitXml -OutputFormat NUnitXml 
+Invoke-Pester -Path .\ -ExcludeTagFilter NotRun -PassThru | ConvertTo-Json -Depth 1 | Set-Content .\data\Test-PsNetTools.json -Encoding utf8 -Force
+Invoke-Pester -Path .\ -ExcludeTagFilter NotRun -OutputFile .\data\Test-PsNetTools.JUnitXml -OutputFormat JUnitXml 
+Invoke-Pester -Path .\ -ExcludeTagFilter NotRun -OutputFile .\data\Test-PsNetTools.NUnitXml -OutputFormat NUnitXml 
 #>

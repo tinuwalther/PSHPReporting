@@ -323,6 +323,12 @@ Get-ChildItem $($PSScriptRoot).Replace('bin','data') -Filter '*.*UnitXml' | ForE
 }
 
 # Start each html-file with the registered program
-Get-ChildItem $($PSScriptRoot).Replace('bin','') -Filter '*.html' | ForEach-Object {
-    Start-Process $_.FullName -PassThru
+if(($PSVersionTable.PSVersion.Major -lt 6) -or ($IsWindows)){
+    Get-ChildItem $($PSScriptRoot).Replace('bin','') -Filter '*.html' | ForEach-Object {
+        Start-Process $_.FullName -PassThru
+    }
+}else{
+    Get-ChildItem $($PSScriptRoot).Replace('bin','') -Filter '*.html' | ForEach-Object {
+        Start-Process "file://$($_.FullName)" -PassThru
+    }
 }

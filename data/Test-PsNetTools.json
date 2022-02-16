@@ -1,6 +1,6 @@
 {
   "Containers": [
-    "[-] D:\\github.com\\PrivateStuff\\PesterReport\\functions\\Invoke-PesterResult.Tests.ps1"
+    "[-] /Volumes/PSRepository/git/external/PSHPReporting/bin/Invoke-PesterResult.Tests.ps1"
   ],
   "Result": "Failed",
   "FailedCount": 2,
@@ -11,20 +11,20 @@
   "NotRunCount": 1,
   "TotalCount": 6,
   "Duration": {
-    "Ticks": 1262585,
+    "Ticks": 1813383,
     "Days": 0,
     "Hours": 0,
-    "Milliseconds": 126,
+    "Milliseconds": 181,
     "Minutes": 0,
     "Seconds": 0,
-    "TotalDays": 1.4613252314814815E-06,
-    "TotalHours": 3.507180555555555E-05,
-    "TotalMilliseconds": 126.2585,
-    "TotalMinutes": 0.002104308333333333,
-    "TotalSeconds": 0.1262585
+    "TotalDays": 2.098822916666667E-06,
+    "TotalHours": 5.037175E-05,
+    "TotalMilliseconds": 181.3383,
+    "TotalMinutes": 0.003022305,
+    "TotalSeconds": 0.1813383
   },
   "Executed": true,
-  "ExecutedAt": "2022-02-04T20:37:11.645351+01:00",
+  "ExecutedAt": "2022-02-16T16:10:48.962718+01:00",
   "Version": "5.2.2",
   "PSVersion": "7.2.1",
   "PSBoundParameters": {
@@ -45,43 +45,43 @@
     "Output": "Output configuration"
   },
   "DiscoveryDuration": {
-    "Ticks": 166490,
+    "Ticks": 337628,
     "Days": 0,
     "Hours": 0,
-    "Milliseconds": 16,
+    "Milliseconds": 33,
     "Minutes": 0,
     "Seconds": 0,
-    "TotalDays": 1.9269675925925926E-07,
-    "TotalHours": 4.624722222222222E-06,
-    "TotalMilliseconds": 16.649,
-    "TotalMinutes": 0.00027748333333333335,
-    "TotalSeconds": 0.016649
+    "TotalDays": 3.9077314814814816E-07,
+    "TotalHours": 9.378555555555556E-06,
+    "TotalMilliseconds": 33.7628,
+    "TotalMinutes": 0.0005627133333333333,
+    "TotalSeconds": 0.0337628
   },
   "UserDuration": {
-    "Ticks": 402299,
+    "Ticks": 633316,
     "Days": 0,
     "Hours": 0,
-    "Milliseconds": 40,
+    "Milliseconds": 63,
     "Minutes": 0,
     "Seconds": 0,
-    "TotalDays": 4.656238425925926E-07,
-    "TotalHours": 1.1174972222222222E-05,
-    "TotalMilliseconds": 40.2299,
-    "TotalMinutes": 0.0006704983333333333,
-    "TotalSeconds": 0.0402299
+    "TotalDays": 7.330046296296296E-07,
+    "TotalHours": 1.7592111111111113E-05,
+    "TotalMilliseconds": 63.3316,
+    "TotalMinutes": 0.0010555266666666667,
+    "TotalSeconds": 0.0633316
   },
   "FrameworkDuration": {
-    "Ticks": 693796,
+    "Ticks": 842439,
     "Days": 0,
     "Hours": 0,
-    "Milliseconds": 69,
+    "Milliseconds": 84,
     "Minutes": 0,
     "Seconds": 0,
-    "TotalDays": 8.030046296296296E-07,
-    "TotalHours": 1.927211111111111E-05,
-    "TotalMilliseconds": 69.3796,
-    "TotalMinutes": 0.0011563266666666666,
-    "TotalSeconds": 0.0693796
+    "TotalDays": 9.75045138888889E-07,
+    "TotalHours": 2.3401083333333332E-05,
+    "TotalMilliseconds": 84.2439,
+    "TotalMinutes": 0.001404065,
+    "TotalSeconds": 0.0842439
   },
   "Failed": [
     "[-] [NEG] Test-PsNetDig should return true",
